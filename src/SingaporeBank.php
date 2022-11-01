@@ -1,5 +1,5 @@
 <?php
-include "BankStrategy.php";
+require "BankStrategy.php";
 
 class SingaporeBank implements BankStrategy
 {
@@ -20,7 +20,9 @@ class SingaporeBank implements BankStrategy
 
     public function setFile(string $file)
     {
-        if (file_exists($this->file)) throw new Exception('File does not exist');
+        if (!file_exists($file)) { 
+            throw new ErrorException('File does not exist');
+        }
         $this->file = $file;
     }
 
@@ -32,7 +34,9 @@ class SingaporeBank implements BankStrategy
     public function process(): array
     {
         $result = [];
-        if (!$this->file) throw new Exception("No file set");
+        if (!$this->file) { 
+            throw new Exception("No file set");
+        }
         $document = fopen($this->file, "r");
         $this->setHeader(fgetcsv($document));
 
@@ -54,7 +58,9 @@ class SingaporeBank implements BankStrategy
         $rcs = [];
         while (!feof($document)) {
             $row = fgetcsv($document);
-            if (!$this->isValidRow($row)) continue;
+            if (!$this->isValidRow($row)) { 
+                continue;
+            }
 
             $rcs[] = [
                 "amount" => [

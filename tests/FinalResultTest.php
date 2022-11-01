@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase; 
-include 'src/FinalResult.php';
+require 'src/FinalResult.php';
 
 
 
@@ -37,5 +37,13 @@ final class FinalResultTest extends TestCase
         $res = $f->results('tests/support/data_sample.csv');
         unset($res["document"]); 
         $this->assertEquals($res, $this->expected_return);
+    }
+
+    public function testIncorrectDocument(): void
+    {
+        $f = new FinalResult();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('File does not exist');
+        $f->results('tests/support/ok.csv');
     }
 }
